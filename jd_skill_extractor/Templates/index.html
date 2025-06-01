@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Xaver Technology | Upload Job Description</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload job descriptions for analysis">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      background-size: 300% 300%;
+      animation: animatedBG 12s ease infinite;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    @keyframes animatedBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-container img {
+      width: 240px;
+      max-width: 90vw;
+      height: auto;
+      filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.9; }
+    }
+
+    .upload-box {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      padding: 30px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+      margin-bottom: 30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .upload-box h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #00ffe7;
+    }
+
+    label.upload-area {
+      border: 2px dashed rgba(255,255,255,0.3);
+      padding: 1.5rem;
+      border-radius: 15px;
+      background-color: rgba(255,255,255,0.05);
+      cursor: pointer;
+      display: block;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    label.upload-area:hover {
+      background-color: rgba(255,255,255,0.1);
+      transform: scale(1.02);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-name {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+      word-break: break-word;
+    }
+
+    .upload-btn {
+      margin-top: 1.5rem;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00b894, #00cec9);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .upload-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 206, 201, 0.3);
+    }
+
+    .upload-btn:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-section {
+      margin-top: 30px;
+      max-width: 720px;
+      width: 100%;
+      text-align: center;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .result-section h3 {
+      font-size: 1.5rem;
+      color: #00ffc8;
+      margin-bottom: 15px;
+    }
+
+    .result-content {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #e0e0e0;
+      text-align: left;
+    }
+
+    .result-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border-left: 3px solid #00cec9;
+    }
+
+    .result-item strong {
+      color: #00ffe7;
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px 10px;
+      font-size: 0.85rem;
+      color: #aaa;
+      text-align: center;
+    }
+
+    footer span {
+      color: #00cec9;
+      font-weight: 600;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #00ffe7;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media screen and (max-width: 480px) {
+      .upload-box {
+        padding: 20px;
+      }
+
+      .upload-box h2 {
+        font-size: 1.5rem;
+      }
+
+      .logo-container img {
+        width: 160px;
+      }
+
+      .result-section {
+        padding: 20px;
+      }
+
+      .result-section h3 {
+        font-size: 1.2rem;
+      }
+
+      .result-content {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="hexa.png" alt="Xaver Technology Logo">
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-box">
+    <h2>Upload Your Job Description</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <label for="fileInput" class="upload-area">
+        Click or drag your file here
+        <input type="file" id="fileInput" name="file" accept=".csv,.xlsx,.xls,.pdf,.doc,.docx" required>
+      </label>
+      <div class="file-name" id="fileName">No file selected</div>
+      <div class="error-message" id="errorMessage"></div>
+      <button type="submit" class="upload-btn" id="submitBtn" disabled>Upload File</button>
+    </form>
+  </div>
+
+  <!-- Result section -->
+  <div id="result" class="result-section">
+    <h3>Analysis Result</h3>
+    <div class="result-content" id="resultContent"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    This site was created by <span>rahavi@hexaware.com</span>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const fileInput = document.getElementById('fileInput');
+      const fileName = document.getElementById('fileName');
+      const errorMessage = document.getElementById('errorMessage');
+      const form = document.getElementById('uploadForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const resultBox = document.getElementById('result');
+      const resultContent = document.getElementById('resultContent');
+
+      fileInput.addEventListener('change', () => {
+        errorMessage.textContent = '';
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const validTypes = [
+            'text/csv',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ];
+          fileName.textContent = file.name;
+
+          if (!validTypes.includes(file.type)) {
+            errorMessage.textContent = 'Invalid file type. Please upload CSV, Excel, PDF, or Word document.';
+            submitBtn.disabled = true;
+            return;
+          }
+
+          submitBtn.disabled = false;
+        } else {
+          fileName.textContent = 'No file selected';
+          submitBtn.disabled = true;
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!fileInput.files.length) {
+          errorMessage.textContent = 'Please select a file first.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading"></span> Processing...';
+        resultBox.style.display = 'block';
+        resultContent.innerHTML = '<p>Analyzing your document...</p>';
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch('/upload/', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (!response.ok) throw new Error('Upload failed.');
+
+          const result = await response.json();
+          resultContent.innerHTML = '';
+
+          if (result.analysis && Array.isArray(result.analysis)) {
+            result.analysis.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'result-item';
+              div.innerHTML = `<strong>${item.label}:</strong> ${item.value}`;
+              resultContent.appendChild(div);
+            });
+          } else {
+            resultContent.innerHTML = '<p>No results found.</p>';
+          }
+
+        } catch (error) {
+          resultContent.innerHTML = `<p style="color: #ff6b6b;">${error.message}</p>`;
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Upload File';
+      });
+    });
+  </script>
+
+</body>
+</html>
