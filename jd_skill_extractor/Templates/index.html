@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Xaver Technology | Upload Job Description</title>
+  <title>Xaver Technology | Job Description Skills Analyzer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Upload job descriptions for analysis">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Upload job descriptions for AI-powered skills analysis">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -73,8 +73,14 @@
     .upload-box h2 {
       font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
       color: #00ffe7;
+    }
+
+    .upload-box .subtitle {
+      font-size: 0.95rem;
+      color: #b0b0b0;
+      margin-bottom: 25px;
     }
 
     label.upload-area {
@@ -91,6 +97,7 @@
     label.upload-area:hover {
       background-color: rgba(255,255,255,0.1);
       transform: scale(1.02);
+      border-color: rgba(0, 255, 231, 0.5);
     }
 
     input[type="file"] {
@@ -100,8 +107,9 @@
     .file-name {
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: #ccc;
+      color: #00ffe7;
       word-break: break-word;
+      font-weight: 600;
     }
 
     .upload-btn {
@@ -119,7 +127,7 @@
       max-width: 200px;
     }
 
-    .upload-btn:hover {
+    .upload-btn:hover:not(:disabled) {
       transform: scale(1.05);
       box-shadow: 0 4px 15px rgba(0, 206, 201, 0.3);
     }
@@ -128,13 +136,37 @@
       background: #666;
       cursor: not-allowed;
       transform: none;
+      opacity: 0.7;
+    }
+
+    .progress-section {
+      margin-top: 30px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00b894, #00cec9);
+      width: 0%;
+      transition: width 0.3s ease;
     }
 
     .result-section {
       margin-top: 30px;
-      max-width: 720px;
+      max-width: 1000px;
       width: 100%;
-      text-align: center;
       padding: 25px;
       background: rgba(255, 255, 255, 0.04);
       border-radius: 16px;
@@ -144,49 +176,107 @@
       display: none;
     }
 
-    .result-section h3 {
-      font-size: 1.5rem;
+    .result-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .result-header h3 {
+      font-size: 1.8rem;
       color: #00ffc8;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
     }
 
-    .result-content {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #e0e0e0;
-      text-align: left;
+    .result-stats {
+      font-size: 0.95rem;
+      color: #b0b0b0;
     }
 
-    .result-item {
-      margin-bottom: 20px;
-      padding: 15px;
+    .results-container {
+      display: grid;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .job-item {
       background: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      border-left: 3px solid #00cec9;
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 4px solid #00cec9;
+      transition: transform 0.2s ease;
     }
 
-    .result-item strong {
+    .job-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .job-description {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .job-description h4 {
       color: #00ffe7;
-      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
 
-    footer {
-      margin-top: 50px;
-      padding: 20px 10px;
-      font-size: 0.85rem;
-      color: #aaa;
+    .job-description p {
+      color: #e0e0e0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .skills-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .skill-group h5 {
+      color: #00ffc8;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .primary-skill {
+      background: rgba(0, 184, 148, 0.2);
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #00ffc8;
+      font-weight: 600;
+      font-size: 0.9rem;
       text-align: center;
     }
 
-    footer span {
+    .secondary-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      background: rgba(0, 206, 201, 0.2);
       color: #00cec9;
-      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
 
     .error-message {
       color: #ff6b6b;
       margin-top: 10px;
       font-size: 0.9rem;
+      background: rgba(255, 107, 107, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 3px solid #ff6b6b;
     }
 
     .loading {
@@ -204,11 +294,31 @@
       to { transform: rotate(360deg); }
     }
 
-    @media screen and (max-width: 480px) {
-      .upload-box {
+    footer {
+      margin-top: 50px;
+      padding: 20px 10px;
+      font-size: 0.85rem;
+      color: #aaa;
+      text-align: center;
+    }
+
+    footer span {
+      color: #00cec9;
+      font-weight: 600;
+    }
+
+    @media screen and (max-width: 768px) {
+      .skills-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .upload-box, .result-section {
         padding: 20px;
       }
+    }
 
+    @media screen and (max-width: 480px) {
       .upload-box h2 {
         font-size: 1.5rem;
       }
@@ -217,16 +327,12 @@
         width: 160px;
       }
 
-      .result-section {
-        padding: 20px;
+      .result-header h3 {
+        font-size: 1.4rem;
       }
 
-      .result-section h3 {
-        font-size: 1.2rem;
-      }
-
-      .result-content {
-        font-size: 0.95rem;
+      .job-item {
+        padding: 15px;
       }
     }
   </style>
@@ -240,22 +346,34 @@
 
   <!-- Upload Section -->
   <div class="upload-box">
-    <h2>Upload Your Job Description</h2>
+    <h2>Job Description Skills Analyzer</h2>
+    <p class="subtitle">Upload Excel/CSV files with job descriptions for AI-powered skills extraction</p>
     <form id="uploadForm" enctype="multipart/form-data">
       <label for="fileInput" class="upload-area">
-        Click or drag your file here
-        <input type="file" id="fileInput" name="file" accept=".csv,.xlsx,.xls,.pdf,.doc,.docx" required>
+        📁 Click or drag your file here
+        <input type="file" id="fileInput" name="file" accept=".csv,.xlsx,.xls" required>
       </label>
       <div class="file-name" id="fileName">No file selected</div>
-      <div class="error-message" id="errorMessage"></div>
-      <button type="submit" class="upload-btn" id="submitBtn" disabled>Upload File</button>
+      <div class="error-message" id="errorMessage" style="display: none;"></div>
+      <button type="submit" class="upload-btn" id="submitBtn" disabled>Analyze Skills</button>
     </form>
   </div>
 
+  <!-- Progress Section -->
+  <div id="progressSection" class="progress-section">
+    <p id="progressText">Processing your job descriptions...</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
   <!-- Result section -->
-  <div id="result" class="result-section">
-    <h3>Analysis Result</h3>
-    <div class="result-content" id="resultContent"></div>
+  <div id="resultSection" class="result-section">
+    <div class="result-header">
+      <h3>Analysis Results</h3>
+      <div class="result-stats" id="resultStats"></div>
+    </div>
+    <div class="results-container" id="resultsContainer"></div>
   </div>
 
   <!-- Footer -->
@@ -271,25 +389,27 @@
       const errorMessage = document.getElementById('errorMessage');
       const form = document.getElementById('uploadForm');
       const submitBtn = document.getElementById('submitBtn');
-      const resultBox = document.getElementById('result');
-      const resultContent = document.getElementById('resultContent');
+      const progressSection = document.getElementById('progressSection');
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      const resultSection = document.getElementById('resultSection');
+      const resultStats = document.getElementById('resultStats');
+      const resultsContainer = document.getElementById('resultsContainer');
 
       fileInput.addEventListener('change', () => {
-        errorMessage.textContent = '';
+        errorMessage.style.display = 'none';
         if (fileInput.files.length > 0) {
           const file = fileInput.files[0];
           const validTypes = [
             'text/csv',
             'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           ];
-          fileName.textContent = file.name;
+          
+          fileName.textContent = `📄 ${file.name}`;
 
-          if (!validTypes.includes(file.type)) {
-            errorMessage.textContent = 'Invalid file type. Please upload CSV, Excel, PDF, or Word document.';
+          if (!validTypes.includes(file.type) && !file.name.match(/\.(csv|xlsx|xls)$/i)) {
+            showError('Invalid file type. Please upload CSV or Excel files only.');
             submitBtn.disabled = true;
             return;
           }
@@ -301,50 +421,114 @@
         }
       });
 
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+
+      function hideError() {
+        errorMessage.style.display = 'none';
+      }
+
+      function showProgress() {
+        progressSection.style.display = 'block';
+        resultSection.style.display = 'none';
+        
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress > 90) progress = 90;
+          progressFill.style.width = progress + '%';
+        }, 500);
+
+        return interval;
+      }
+
+      function hideProgress(interval) {
+        clearInterval(interval);
+        progressFill.style.width = '100%';
+        setTimeout(() => {
+          progressSection.style.display = 'none';
+        }, 500);
+      }
+
+      function displayResults(data) {
+        resultStats.textContent = `Processed ${data.total_processed} job descriptions (Found ${data.total_found} total)`;
+        resultsContainer.innerHTML = '';
+
+        data.results.forEach((item, index) => {
+          const jobDiv = document.createElement('div');
+          jobDiv.className = 'job-item';
+          
+          const secondarySkillsHtml = item.secondary_skills.length > 0 
+            ? item.secondary_skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')
+            : '<span class="skill-tag">None specified</span>';
+
+          jobDiv.innerHTML = `
+            <div class="job-description">
+              <h4>Job Description ${index + 1}</h4>
+              <p>${item.job_description}</p>
+            </div>
+            <div class="skills-section">
+              <div class="skill-group">
+                <h5>Primary Skill</h5>
+                <div class="primary-skill">${item.primary_skill}</div>
+              </div>
+              <div class="skill-group">
+                <h5>Secondary Skills</h5>
+                <div class="secondary-skills">${secondarySkillsHtml}</div>
+              </div>
+            </div>
+          `;
+          
+          resultsContainer.appendChild(jobDiv);
+        });
+
+        resultSection.style.display = 'block';
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         if (!fileInput.files.length) {
-          errorMessage.textContent = 'Please select a file first.';
+          showError('Please select a file first.');
           return;
         }
 
+        hideError();
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="loading"></span> Processing...';
-        resultBox.style.display = 'block';
-        resultContent.innerHTML = '<p>Analyzing your document...</p>';
-
+        submitBtn.innerHTML = '<span class="loading"></span> Analyzing...';
+        
+        const progressInterval = showProgress();
         const formData = new FormData(form);
 
         try {
           const response = await fetch('/upload/', {
             method: 'POST',
             body: formData,
-            headers: { 'Accept': 'application/json' }
+            headers: { 
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
           });
 
-          if (!response.ok) throw new Error('Upload failed.');
-
           const result = await response.json();
-          resultContent.innerHTML = '';
+          hideProgress(progressInterval);
 
-          if (result.analysis && Array.isArray(result.analysis)) {
-            result.analysis.forEach(item => {
-              const div = document.createElement('div');
-              div.className = 'result-item';
-              div.innerHTML = `<strong>${item.label}:</strong> ${item.value}`;
-              resultContent.appendChild(div);
-            });
+          if (result.status === 'success') {
+            displayResults(result);
           } else {
-            resultContent.innerHTML = '<p>No results found.</p>';
+            showError(result.message || 'An error occurred during processing.');
           }
 
         } catch (error) {
-          resultContent.innerHTML = `<p style="color: #ff6b6b;">${error.message}</p>`;
+          hideProgress(progressInterval);
+          showError(`Upload failed: ${error.message}`);
         }
 
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Upload File';
+        submitBtn.textContent = 'Analyze Skills';
       });
     });
   </script>

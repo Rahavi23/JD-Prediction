@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from analyzer import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='home'),
+    path('', views.index, name='index'),
     path('upload/', views.upload_file, name='upload_file'),
+    path('analyze/', views.analyze_single_jd, name='analyze_single_jd'),
+    path('debug-claude/', views.debug_claude, name='debug_claude'),
 ]
